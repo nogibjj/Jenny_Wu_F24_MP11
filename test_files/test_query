@@ -1,0 +1,36 @@
+%python
+import pytest
+from unittest.mock import patch, MagicMock
+from pyspark.sql import SparkSession
+import pandas as pd
+
+# Import the functions from your notebook
+from query import query, log_query, LOG_FILE
+
+# Initialize Spark session for testing
+spark = SparkSession.builder.master("local").appName("test").getOrCreate()
+
+# Mock the Spark session in your notebook
+@patch('query.spark', spark)
+def test_query():
+    # Mock the log_query function to avoid file I/O during tests
+    with patch('query.log_query') as mock_log_query:
+        # Create a mock DataFrame
+        data = {'Incident_Key': [1, 2], 'Boro': ['QUEENS', 'QUEENS'], 'PERP_SEX': ['M', 'F'], 'Perp_Race': ['BLACK', 'WHITE'], 'VIC_SEX': ['M', 'F'], 'VIC_RACE': ['BLACK', 'WHITE'], 'OCCUR_DATE': ['04/19/2008', '04/19/2008']}
+        mock_df = pd.DataFrame(data)
+        spark_df = spark.createDataFrame(mock_df)
+
+        # Mock the spark.sql function to return the mock DataFrame
+        with patch.object(spark, 'sql', return_value=spark_df):
+            result_df = query("""
+                SELECT *
+                FROM ids706_data_engineering.jcw131_nyc_shooting.jcw131_nyc_shooting_transformed
+                WHERE OCCUR_DATE = '04/19/2008'
+            """, delta_table_name="ids706_data_engineering.jcw131_nyc_shooting.jcw131_nyc_shooting_transformed")
+
+            # Check if the result is as expected
+            assert result_df.count() == 2
+            assert result_df.filter(result_df.Boro == 'QUEENS').count() == 2
+
+if __name__ == "__main__":
+    pytest.main()
