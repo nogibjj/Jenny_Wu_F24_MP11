@@ -13,5 +13,5 @@ The ETL-Query pipeline includes the following steps:
 3. **Transform**: Data cleaning, formatting, and enrichment processes are applied using **PySpark** to make the data analysis-ready. To transform the data, we filtered the dataset to just include all incidents which occurred in Queens. We conducted another load to save this transformed database into a Delta Table. 
 4. **Query**: The Delta Table serves as the foundation for running **SQL** queries and performing analysis efficiently. For this project, we queried all incidents that occurred on April 19th, 2008. These results can be found in the query_log.md file. 
 
-
+![alt text](query_data.png)
 
