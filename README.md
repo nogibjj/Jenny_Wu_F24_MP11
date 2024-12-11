@@ -1,6 +1,6 @@
 # Jenny_Wu_F24_MP11
 
-![](/Workspace/Shared/Jenny_Wu_F24_MP11/successful_pipeline)
+![alt text](successful_pipeline.png)
 
 #### Purpose of Project
 This project demonstrates the implementation of an **ETL (Extract, Transform, Load) and Query pipeline within the Databricks environment**. The pipeline is developed using **PySpark**, extracting raw data, applying transformations, and storing the processed data in Delta Tables for efficient querying and analysis.
